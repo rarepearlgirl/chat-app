@@ -14,7 +14,7 @@ import {
   View,
 } from "react-native";
 
-const imgBackground = require("../assets/Background Image.png");
+const imgBackground = require("../assets/Background-Image.png");
 
 const Start = ({ navigation }) => {
   const [background, setBackground] = useState();

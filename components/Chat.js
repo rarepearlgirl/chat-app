@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { Bubble, GiftedChat, InputToolbar } from "react-native-gifted-chat";
 
-
 const Chat = ({ route, navigation, db, isConnected, storage }) => {
   const color = route.params.color;
   const name = route.params.name;
@@ -33,38 +32,18 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
   };
 
   useEffect(() => {
-    navigation.setOptions({ title: name });
-
-    if (isConnected === true) {
-      // unregister current onSnapshot() listener to avoid registering multiple listeners when
-      // useEffect code is re-executed.
-      if (unsubMessages) unsubMessages();
-      unsubMessages = null;
-      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-      unsubMessages = onSnapshot(q, (docs) => {
-        let newMessages = [];
-        docs.forEach((doc) => {
-          newMessages.push({
-            id: doc.id,
-            ...doc.data(),
-            createdAt: new Date(doc.data().createdAt.toMillis()),
-          });
-        });
-        cacheMessages(newMessages);
-        setMessages(newMessages);
-      });
-    } else {
-      loadCachedMessages();
-
-      // Clean up code
-      return () => {
-        if (unsubShoppinglists) unsubShoppinglists();
-      };
-    }
-
-    return () => {
-      if (unsubMessages) unsubMessages();
-    };
+    setMessages([
+      {
+        _id: 1,
+        text: "Hello",
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: "React Native",
+          avatar: "",
+        },
+      },
+    ]);
   }, []);
 
     return (
@@ -73,14 +52,14 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
         <GiftedChat
           messages={messages}
           renderBubble={renderBubble}
-          renderInputToolbar={renderInputToolbar}
+          // renderInputToolbar={renderInputToolbar}
           onSend={(messages) => onSend(messages)}
-          renderActions={renderCustomActions}
-          renderCustomView={renderCustomView}
+          // renderActions={renderCustomActions}
+          // renderCustomView={renderCustomView}
           user={{ _id: 1, name: name }}
         />
 
-        {/* when typing, makes the keyboard not hide imput or information that would be behind it */}
+        {/* when typing, makes the keyboard not hide input or information that would be behind it */}
         {Platform.OS === "android" ? (
           <KeyboardAvoidingView behavior="height" />
         ) : null}

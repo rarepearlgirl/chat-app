@@ -13,12 +13,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { getAuth, signInAnonymously } from "firebase/auth";
 
 const imgBackground = require("../assets/Background-Image.png");
 
 const Start = ({ navigation }) => {
   const [background, setBackground] = useState();
   const [username, setUsername] = useState();
+
+  const auth = getAuth();
 
   const signInUser = () => {
     signInAnonymously(auth)
@@ -29,7 +32,7 @@ const Start = ({ navigation }) => {
           name: username,
           color: background,
         });
-        Alert.alert("signed in successfully");
+        Alert.alert("sign-in successful");
       })
       .catch((error) => {
         Alert.alert("unable to sign it, try again later");
@@ -41,16 +44,16 @@ const Start = ({ navigation }) => {
     <View style={styles.container}>
       <ImageBackground source={imgBackground} style={styles.image}>
         {/* app title: */}
-        <Text style={styles.title}>Chatroom App</Text>
+        <Text style={styles.title}>Chat App</Text>
 
-        {/* container for imput, color choice and button */}
-        <View style={styles.imputBox}>
-          {/* username imput */}
+        {/* container for input, color choice and button */}
+        <View style={styles.inputBox}>
+          {/* username input */}
           <TextInput
             placeholder="Type Your Name Here"
             value={username}
             onChangeText={setUsername}
-            style={styles.textImput}
+            style={styles.textInput}
           ></TextInput>
 
           <View>
@@ -102,7 +105,7 @@ const Start = ({ navigation }) => {
         </View>
       </ImageBackground>
 
-      {/* when typing, makes the keyboard not hide imput or information that would be behind it // padding should be used for ios instead of "height*/}
+      {/* when typing, makes the keyboard not hide input or information that would be behind it // padding should be used for ios instead of "height*/}
       {Platform.OS === "ios" ? (
         <KeyboardAvoidingView behavior="padding" />
       ) : null}
@@ -128,7 +131,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 250,
   },
-  imputBox: {
+  inputBox: {
     // flex: 1,
     height: "44%",
     width: "88%",
@@ -138,7 +141,7 @@ const styles = StyleSheet.create({
     // textAlign: "center",
     justifyContent: "space-evenly",
   },
-  textImput: {
+  textInput: {
     width: "88%",
     padding: 15,
     borderWidth: 1,

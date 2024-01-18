@@ -1,3 +1,11 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -7,6 +15,8 @@ import {
   View,
 } from "react-native";
 import { Bubble, GiftedChat, InputToolbar } from "react-native-gifted-chat";
+// import CustomActions from "./CustomActions";
+// import MapView from "react-native-maps";
 
 const Chat = ({ route, navigation, db, isConnected, storage }) => {
   const color = route.params.color;
@@ -18,7 +28,6 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
     addDoc(collection(db, "messages"), newMessages[0]);
   };
 
-  //customizes chat bubble colors
   const renderBubble = (props) => {
     return (
       <Bubble
@@ -31,35 +40,77 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
     );
   };
 
+  const loadCachedMessages = async () => {
+    const cachedMessages = (await AsyncStorage.getItem("messages")) || [];
+    setLists(JSON.parse(cachedMessages));
+  };
+
+  const cacheMessages = async (messagesToCache) => {
+    try {
+      await AsyncStorage.setItem("messages", JSON.stringify(messagesToCache));
+    } catch (error) {
+      console.log(error.message);
+    }
+  }; 
+  let unsubMessages;
+
   useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: "Hello",
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: "React Native",
-          avatar: "",
-        },
-      },
-    ]);
+    navigation.setOptions({ title: name });
+
+    if (isConnected === true) {
+      // unregister current onSnapshot() listener to avoid registering multiple listeners when
+      // useEffect code is re-executed.
+      if (unsubMessages) unsubMessages();
+      unsubMessages = null;
+      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+      unsubMessages = onSnapshot(q, (docs) => {
+        let newMessages = [];
+        docs.forEach((doc) => {
+          newMessages.push({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: new Date(doc.data().createdAt.toMillis()),
+          });
+        });
+        cacheMessages(newMessages);
+        setMessages(newMessages);
+      });
+    } else {
+      loadCachedMessages();
+
+      // Clean up code
+      return () => {
+        if (unsubBooklists) unsubBooklists();
+      };
+    }
+
+    return () => {
+      if (unsubMessages) unsubMessages();
+    };
   }, []);
 
+  useEffect(() => {
+    //sets chat page title to username given on start page
+    navigation.setOptions({ title: name });
+  });
+
+  const renderInputToolbar = (props) => {
+    if (isConnected) return <InputToolbar {...props} />;
+    else return null;
+  };
+
+  
     return (
-      //sets background color to the color selected in start
       <View style={[styles.container, { backgroundColor: color }]}>
         <GiftedChat
           messages={messages}
           renderBubble={renderBubble}
-          // renderInputToolbar={renderInputToolbar}
+          renderInputToolbar={renderInputToolbar}
           onSend={(messages) => onSend(messages)}
-          // renderActions={renderCustomActions}
-          // renderCustomView={renderCustomView}
           user={{ _id: 1, name: name }}
         />
 
-        {/* when typing, makes the keyboard not hide input or information that would be behind it */}
+        
         {Platform.OS === "android" ? (
           <KeyboardAvoidingView behavior="height" />
         ) : null}

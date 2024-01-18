@@ -25,7 +25,6 @@ const Start = ({ navigation }) => {
 
   const signInUser = () => {
     signInAnonymously(auth)
-      //after user has been signed in anonymously, navigate to Chat, and pass this object to it (available there through route.params.color for ex.\)
       .then((result) => {
         navigation.navigate("Chat", {
           userID: result.user.uid,
@@ -46,7 +45,6 @@ const Start = ({ navigation }) => {
         {/* app title: */}
         <Text style={styles.title}>Chat App</Text>
 
-        {/* container for input, color choice and button */}
         <View style={styles.inputBox}>
           {/* username input */}
           <TextInput
@@ -59,10 +57,7 @@ const Start = ({ navigation }) => {
           <View>
             <Text style={styles.chooseBgText}>Choose Background Color</Text>
 
-            {/* testing color update: */}
-            {/* <Text>{background}</Text> */}
-
-            {/* container for colors: */}
+          
             <View style={styles.colorButtonBox}>
               {/* color 1 */}
 
@@ -98,14 +93,12 @@ const Start = ({ navigation }) => {
               ></TouchableOpacity>
             </View>
           </View>
-          {/* button to start chatting, links to chat.js */}
           <TouchableOpacity style={styles.button} onPress={signInUser}>
             <Text style={styles.buttonText}>Start Chatting</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>
 
-      {/* when typing, makes the keyboard not hide input or information that would be behind it // padding should be used for ios instead of "height*/}
       {Platform.OS === "ios" ? (
         <KeyboardAvoidingView behavior="padding" />
       ) : null}

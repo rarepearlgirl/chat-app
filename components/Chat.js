@@ -15,8 +15,8 @@ import {
   View,
 } from "react-native";
 import { Bubble, GiftedChat, InputToolbar } from "react-native-gifted-chat";
-// import CustomActions from "./CustomActions";
-// import MapView from "react-native-maps";
+import CustomActions from "./CustomActions";
+import MapView from "react-native-maps";
 
 const Chat = ({ route, navigation, db, isConnected, storage }) => {
   const color = route.params.color;
@@ -58,8 +58,6 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
     navigation.setOptions({ title: name });
 
     if (isConnected === true) {
-      // unregister current onSnapshot() listener to avoid registering multiple listeners when
-      // useEffect code is re-executed.
       if (unsubMessages) unsubMessages();
       unsubMessages = null;
       const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
@@ -99,6 +97,27 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
     else return null;
   };
 
+  const renderCustomActions = (props) => {
+    return <CustomActions storage={storage} {...props} />;
+  };
+
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  };
   
     return (
       <View style={[styles.container, { backgroundColor: color }]}>
@@ -107,6 +126,8 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
           renderBubble={renderBubble}
           renderInputToolbar={renderInputToolbar}
           onSend={(messages) => onSend(messages)}
+          renderActions={renderCustomActions}
+          renderCustomView={renderCustomView}
           user={{ _id: 1, name: name }}
         />
 

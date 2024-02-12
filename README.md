@@ -45,7 +45,7 @@ If you'd like to contribute to Chat-app, please follow these guidelines:
 3. Ensure that your code follows the established coding style and conventions.
 
 ## Author
- - [-](https://github.com/rarepearlgirl) [-](https://github.com/rarepearlgirl)
+ - [rarepearlgirl](https://github.com/rarepearlgirl)
 
 ## License
 

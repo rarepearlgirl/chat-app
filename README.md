@@ -4,8 +4,9 @@
 
 ![screenshot](image.png)
 ![screenshot-2](image-2.png)
-![] (https://github.com/rarepearlgirl/chat-app/blob/main/assets/gif-1.mp4)
-![] (https://github.com/rarepearlgirl/chat-app/blob/main/assets/gif-2.mp4)
+
+* [] (assets/gif-1.mp4)
+* [] (assets/gif-2.mp4)
 
 Chat-app is a cross-platform chat application built using React Native and Expo. It allows users to engage in real-time text conversations, share photos, capture images from the camera, and exchange location data.
 

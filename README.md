@@ -1,5 +1,7 @@
 # Chat-app
 
+## Description
+
 Chat-app is a cross-platform chat application built using React Native and Expo. It allows users to engage in real-time text conversations, share photos, capture images from the camera, and exchange location data.
 
 ## Features

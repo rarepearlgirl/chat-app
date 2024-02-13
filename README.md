@@ -4,7 +4,8 @@
 
 ![screenshot](image.png)
 ![screenshot-2](image-2.png)
-<video controls src="./assets/chat-app-gif.mp4" title="Title"></video>
+gif-1
+gif-2
 
 Chat-app is a cross-platform chat application built using React Native and Expo. It allows users to engage in real-time text conversations, share photos, capture images from the camera, and exchange location data.
 
